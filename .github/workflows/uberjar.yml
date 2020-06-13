@@ -3,7 +3,7 @@ name: Create überjar and native installers
 on:
   push:
     branches:
-      - master
+      - Optimize-JDK-Usage-Windows-Build
 
 env:
   blt_name: Beat Link Trigger
@@ -115,6 +115,12 @@ jobs:
       with:
         java-version: '14'
 
+    - name: Cache bundled OpenJDK runtime
+      uses: actions/cache@v1
+      with:
+        path: WindowsJDK
+        key: ${{ runner.os }}-bundled-jdk-14
+
     - name: Download überjar
       uses: Xotl/cool-github-releases@v1
       with:
@@ -122,12 +128,6 @@ jobs:
         tag_name: ${{ env.release_tag }}
         assets: ${{ env.uberjar_name }}
         github_token: ${{ github.token }}
-
-    - name: Cache bundled OpenJDK runtime
-      uses: actions/cache@v1
-      with:
-        path: Runtime
-        key: ${{ runner.os }}-bundled-jdk-14
 
     - name: Build Windows Installer
       run: .\.github\scripts\build_msi.ps1

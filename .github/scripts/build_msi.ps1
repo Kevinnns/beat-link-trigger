@@ -18,19 +18,28 @@ if (!(Test-Path $Light)) {
   Write-Warning "Light location not found, please check if Wix-Toolset is installed correctly"
 }
 
+#See Directory Contents
+Dir
+
+#Set JLink Source
+$jlink = ".\WindowsJDK\bin\jlink"
+
 # Download and expand the Amazon Corretto 11 JDK, then use it to build the embedded JRE for inside
 # the Mac application. But if it already exists (because we use a cache action to speed things up),
 # we can skip this section.
-If (! (Test-Path "Runtime")) {
-	Write-Warning "Runtime Folder not found! Downloading Corretto JDK!"
+If (! (Test-Path ".\WindowsJDK")) {
+	Write-Warning "WindowsJDK not found! Downloading Corretto JDK!"
     Invoke-WebRequest https://corretto.aws/downloads/latest/amazon-corretto-11-x64-windows-jdk.zip `
-      -OutFile jdk11.zip
-    Expand-Archive .\jdk11.zip -DestinationPath .\jdk11
-    $jdk11Subdir = (Get-ChildItem -Path jdk11 -name)
-    $jlink = ".\jdk11\$jdk11Subdir\bin\jlink"
-      & $jlink --no-header-files --no-man-pages --compress=2 --strip-debug `
+      -OutFile WindowsJDK.zip
+    Expand-Archive .\WindowsJDK.zip -DestinationPath .\WindowsJDK
+    $jdk11Subdir = (Get-ChildItem -Path WindowsJDK -name)
+    $jlink = ".\WindowsJDK\$jdk11Subdir\bin\jlink"
+ }
+
+# Building Java Runtime Executable using JLINK
+Write-Output "Creating optimized OpenJDK runtime for embedding into Beat Link Trigger."
+& $jlink --no-header-files --no-man-pages --compress=2 --strip-debug `
         --add-modules="$env:blt_java_modules" --output .\Runtime
-}
 
 # Move the downloaded cross-platform executable Jar into an Input folder to be used in building the
 # native app bundle.
