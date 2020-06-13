@@ -21,6 +21,10 @@ if (!(Test-Path $Light)) {
 #See Directory Contents
 Dir
 Dir ".\WindowsJDK"
+Dir ".\WindowsJDK\jdk11.0.7_10"
+
+jlink
+java -v
 
 #Set JLink Source
 $jlink = ".\WindowsJDK\bin\jlink"
