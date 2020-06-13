@@ -18,7 +18,7 @@ if (!(Test-Path $Light)) {
   Write-Warning "Light location not found, please check if Wix-Toolset is installed correctly"
 }
 
-#See Directory Contents
+#See Directory Contents 
 Dir
 
 #Set JLink Source
