@@ -44,11 +44,7 @@ copy ".\.github\resources\MSI Template.wxs" ".\"
 
 #Compile MSI
 Write-Output "Light Command: $Light -b Beat Link Trigger -nologo *.wixobj -out ""$env:artifact_name"" -ext WixUIExtension -ext WixFirewallExtension"
+Write-Output "ENV Vars:"
+Get-ChildItem env:
 
-Try {
-  & $Light -b "Beat Link Trigger" -nologo "*.wixobj" -out ""$env:artifact_name"" -ext WixUIExtension -ext WixFirewallExtension
-}
-Catch {
-  Write-Output "Light threw an error, will try something different"
-  & $Light -b "Beat Link Trigger" -nologo "*.wixobj" -out $env:artifact_name -ext WixUIExtension -ext WixFirewallExtension
-}
+& $Light -b "Beat Link Trigger" -nologo "*.wixobj" -out ""$env:artifact_name"" -ext WixUIExtension -ext WixFirewallExtension
